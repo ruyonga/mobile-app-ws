@@ -1,4 +1,4 @@
-package com.teheca.app.ws;
+package com.teheca.app.ws.io.repositories;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

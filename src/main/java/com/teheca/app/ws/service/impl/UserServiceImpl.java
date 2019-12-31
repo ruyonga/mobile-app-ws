@@ -1,20 +1,23 @@
 package com.teheca.app.ws.service.impl;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.teheca.app.ws.UserRepository;
 import com.teheca.app.ws.io.entity.UserEntity;
-import com.teheca.app.ws.service.UserSerivce;
+import com.teheca.app.ws.io.repositories.UserRepository;
+import com.teheca.app.ws.service.UserService;
 import com.teheca.app.ws.ui.shared.Utils;
 import com.teheca.app.ws.ui.shared.dto.UserDto;
 
 @Service
-public class UserServiceImpl implements UserSerivce {
+public class UserServiceImpl implements UserService {
 
 	@Autowired
 	UserRepository userRepository;
@@ -44,11 +47,28 @@ public class UserServiceImpl implements UserSerivce {
 
 		return returnValue;
 	}
+	
+	
 
 	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		// TODO Auto-generated method stub
-		return null;
+	public UserDto getUser(String email) {
+		UserEntity userEntity = userRepository.findByEmail(email);
+		if(userEntity == null) throw new UsernameNotFoundException(email);
+		
+		UserDto returnValue = new UserDto();
+		BeanUtils.copyProperties(userEntity, returnValue);
+		return returnValue;
+		
+	}
+
+
+
+	@Override
+	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+		UserEntity userEntity = userRepository.findByEmail(email);
+		if(userEntity == null) throw new UsernameNotFoundException(email);
+		
+		return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(), new ArrayList<>());
 	}
 
 }

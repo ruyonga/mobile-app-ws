@@ -7,15 +7,15 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import com.teheca.app.ws.service.UserSerivce;
+import com.teheca.app.ws.service.UserService;
 
 @EnableWebSecurity
 public class WebSecurity extends WebSecurityConfigurerAdapter{
 	
-	private final UserSerivce userDetailsService;
+	private final UserService userDetailsService;
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 	
-	public WebSecurity(UserSerivce userDetailsService, BCryptPasswordEncoder bCryptPasswordEncoder) {
+	public WebSecurity(UserService userDetailsService, BCryptPasswordEncoder bCryptPasswordEncoder) {
 		super();
 		this.userDetailsService = userDetailsService;
 		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
@@ -25,10 +25,12 @@ public class WebSecurity extends WebSecurityConfigurerAdapter{
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable()
 					.authorizeRequests()
-					.antMatchers(HttpMethod.POST, "/users")
+					.antMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_URL)
 					.permitAll()
 					.anyRequest()
-					.authenticated();
+					.authenticated()
+					.and()
+					.addFilter(getAuthenticationFilter());
 	}
 
 	@Override
@@ -37,6 +39,11 @@ public class WebSecurity extends WebSecurityConfigurerAdapter{
 	}
 	
 
-	
+	public AuthenticationFilter getAuthenticationFilter() throws Exception {
+		final AuthenticationFilter filter = new AuthenticationFilter(authenticationManager());
+		filter.setFilterProcessesUrl("/users/login");
+		return filter;
+		
+	}
 	
 }

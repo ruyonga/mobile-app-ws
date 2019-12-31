@@ -4,7 +4,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 import com.teheca.app.ws.ui.shared.dto.UserDto;
 
-public interface UserSerivce extends UserDetailsService {
+public interface UserService extends UserDetailsService {
 	UserDto createUser(UserDto user);
+	UserDto getUser(String email);
 
 }

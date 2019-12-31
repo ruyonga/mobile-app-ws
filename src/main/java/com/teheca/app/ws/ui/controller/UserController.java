@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.teheca.app.ws.service.UserSerivce;
+import com.teheca.app.ws.service.UserService;
 import com.teheca.app.ws.ui.model.UserDetailsRequestModel;
 import com.teheca.app.ws.ui.model.response.UserRest;
 import com.teheca.app.ws.ui.shared.dto.UserDto;
@@ -20,7 +20,7 @@ import com.teheca.app.ws.ui.shared.dto.UserDto;
 public class UserController {
 	
 	@Autowired
-	UserSerivce userService;
+	UserService userService;
 
 	@GetMapping
 	public String getUsers() {
